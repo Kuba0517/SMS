@@ -1,54 +1,32 @@
 package models;
 
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.HashMap;
+import java.util.Map;
 
 public class BSCM implements Runnable {
-    private Queue<String> messageQueue;
-    private boolean isActive;
-    private int timeOut;
+    private Map<String, BTSM> btsMap;
 
-    public BSCM(int timeOut) {
-        this.messageQueue = new LinkedList<>();
-        this.isActive = true;
-        this.timeOut = timeOut;
+    public BSCM() {
+        btsMap = new HashMap<>();
     }
 
-    public void receiveMessage(String message) {
-        synchronized (this) {
-            messageQueue.add(message);
-            notify();
-        }
-    }
-
-    public void stop() {
-        this.isActive = false;
+    public void addBTS(BTSM bts) {
+        btsMap.put(bts.getId(), bts);
     }
 
     @Override
     public void run() {
-        while (isActive) {
-            synchronized (this) {
-                while (messageQueue.isEmpty()) {
-                    try {
-                        wait();
-                    } catch (InterruptedException e) {
-                        Thread.currentThread().interrupt();
-                        System.out.println("Thread was interrupted, Failed to complete operation");
-                    }
+        while (true) {
+            for (BTSM bts : btsMap.values()) {
+                Message message = bts.retrieveMessage();
+                if (message != null) {
+                    processMessage(message);
                 }
-                // process received message
-                String receivedMessage = messageQueue.poll();
-                // TODO: implement logic to process the received message
-                // delay the processing of the message
-                try {
-                    Thread.sleep(timeOut * 1000);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    System.out.println("Thread was interrupted, Failed to complete operation");
-                }
-                // TODO: implement logic to pass the message to the next layer
             }
         }
+    }
+
+    private void processMessage(Message message) {
+        // Logika przetwarzania wiadomości
     }
 }

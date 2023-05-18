@@ -2,10 +2,10 @@ package controller;
 
 import events.ActivityListener;
 import events.FrequencyListener;
-import graphics.VBDG;
+import events.StopListener;
 import models.VBDM;
 
-public class VBDC implements ActivityListener, FrequencyListener {
+public class VBDC implements ActivityListener, FrequencyListener, StopListener {
     private VBDM model;
 
     public VBDC(VBDM model) {
@@ -21,11 +21,12 @@ public class VBDC implements ActivityListener, FrequencyListener {
     @Override
     public void stop() {
         model.setActive(false);
-        System.out.println("Stop");
+        System.out.println("The VBD has stopped");
     }
 
     @Override
     public void statusChanged(String newStatus) {
+        model.setActivity(newStatus);
         System.out.println("Status changed to: " + newStatus);
     }
 

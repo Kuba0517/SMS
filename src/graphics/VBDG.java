@@ -2,6 +2,7 @@ package graphics;
 
 import events.ActivityListener;
 import events.FrequencyListener;
+import events.StopListener;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,10 +14,12 @@ public class VBDG extends JPanel {
     private JComboBox<String> statusComboBox;
     private ActivityListener activityListener;
     private FrequencyListener frequencyListener;
+    private StopListener stopListener;
 
-    public VBDG(ActivityListener activityListener, FrequencyListener frequencyListener, String message, int deviceNumber) {
+    public VBDG(ActivityListener activityListener, FrequencyListener frequencyListener, StopListener stopListener, String message, int deviceNumber) {
         this.activityListener = activityListener;
         this.frequencyListener = frequencyListener;
+        this.stopListener = stopListener;
         setLayout(new GridLayout(0, 1));
 
 
@@ -31,12 +34,16 @@ public class VBDG extends JPanel {
 
         stopButton = new JButton("Stop");
         stopButton.addActionListener(e -> {
-            activityListener.stop();
+            stopListener.stop();
         });
 
         deviceNumberField = new JTextField(String.valueOf(deviceNumber));
         deviceNumberField.setEditable(false);
         statusComboBox = new JComboBox<>(new String[] {"WAITING", "ACTIVE"});
+        statusComboBox.addActionListener(e -> {
+            String status = (String) statusComboBox.getSelectedItem();
+            activityListener.statusChanged(status);
+        });
 
         add(new JLabel("Frequency: "));
         add(frequencySlider);

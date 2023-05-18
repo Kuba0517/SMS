@@ -3,6 +3,7 @@ package models;
 public class VBDM implements Runnable{
     private int frequency;
     private String deviceNumber;
+    private String activity;
     private boolean active;
 
     public VBDM(String message, int deviceNumber) {
@@ -17,6 +18,10 @@ public class VBDM implements Runnable{
 
     public void setFrequency(int frequency) {
         this.frequency = frequency;
+    }
+
+    public void setActivity(String activity){
+        this.activity = activity;
     }
 
     public String getDeviceNumber() {

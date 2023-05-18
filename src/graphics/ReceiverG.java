@@ -3,12 +3,15 @@ package graphics;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import controller.VRDC;
+import models.VRDM;
 
 public class ReceiverG extends JPanel {
     private JButton addButton;
     private JPanel devicePanel;
     private JScrollPane scrollPane;
     private ArrayList<VRDG> devices;
+    private ArrayList<VRDC> controllers;
 
     public ReceiverG() {
         setLayout(new BorderLayout());
@@ -23,9 +26,11 @@ public class ReceiverG extends JPanel {
         add(scrollPane, BorderLayout.CENTER);
 
         addButton.addActionListener(e -> {
-            VRDG device = new VRDG(devices.size());
-            devices.add(device);
-            devicePanel.add(device);
+            VRDM model = new VRDM();
+            VRDC controller = new VRDC(model);
+            VRDG graphics = new VRDG(devices.size(), controller, controller);
+            devices.add(graphics);
+            devicePanel.add(graphics);
             revalidate();
             repaint();
         });
