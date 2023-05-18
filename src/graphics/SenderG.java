@@ -1,24 +1,23 @@
 package graphics;
 
-import controller.VBDC;
+import events.AddButtonListener;
+import events.ViewUpdateListener;
+import models.Message;
 import models.VBDM;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 
-public class SenderG extends JPanel {
+public class SenderG extends JPanel implements ViewUpdateListener<VBDM> {
     private JButton addSenderButton;
     private JPanel devicePanel;
     private JScrollPane scrollPane;
-    private ArrayList<VBDG> devices;
-    private ArrayList<VBDC> controllers;
+    private AddButtonListener addButtonListener;
 
-    public SenderG() {
+    public SenderG(AddButtonListener addButtonListener) {
+        this.addButtonListener = addButtonListener;
         setLayout(new BorderLayout());
 
-        devices = new ArrayList<>();
-        controllers = new ArrayList<>();
         addSenderButton = new JButton("Add");
         devicePanel = new JPanel();
         devicePanel.setLayout(new BoxLayout(devicePanel, BoxLayout.Y_AXIS));
@@ -29,16 +28,20 @@ public class SenderG extends JPanel {
 
         addSenderButton.addActionListener(e -> {
             String message = JOptionPane.showInputDialog(this, "Enter the message");
-            if (message != null) {
-                VBDM model = new VBDM(message,1); // tworzymy nowy model
-                VBDC controller = new VBDC(model); // tworzymy nowy kontroler z tym modelem
-                VBDG device = new VBDG(controller, controller, controller, "Hello", 10); // przekazujemy kontroler jako ActivityListener i FrequencyListener
-                devices.add(device);
-                controllers.add(controller); // zapisujemy referencję do kontrolera
-                devicePanel.add(device);
+            Message messageObj = new Message(message);
+            if (messageObj.getContent() != null) {
+                addButtonListener.addItem(messageObj);
                 revalidate();
                 repaint();
             }
         });
+    }
+
+    @Override
+    public void updateView(VBDM vbdm) {
+        JLabel label = new JLabel("New VBDM added: " + vbdm.getMessage().getContent());
+        devicePanel.add(label);
+        revalidate();
+        repaint();
     }
 }

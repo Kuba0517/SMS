@@ -7,8 +7,7 @@ public class BTSM implements Runnable {
     private String id; // unikalny identyfikator BTS
     private Queue<Message> messages; // kolejka przechowująca wiadomości do przesłania
 
-    public BTSM(String id) {
-        this.id = id;
+    public BTSM() {
         this.messages = new ConcurrentLinkedQueue<>();
     }
 

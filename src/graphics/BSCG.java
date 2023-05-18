@@ -18,7 +18,7 @@ public class BSCG extends JPanel {
         smsTransfered = new JLabel("Ilosc smsow");
         pendingMessages = new JLabel("Pending Messages: 0");
 
-
+        add(new JLabel("BSC"));
         add(number);
         add(smsTransfered);
         add(pendingMessages);

@@ -15,35 +15,17 @@ public class VBDG extends JPanel {
     private ActivityListener activityListener;
     private FrequencyListener frequencyListener;
     private StopListener stopListener;
+    private String message;
+    private int deviceNumber;
 
-    public VBDG(ActivityListener activityListener, FrequencyListener frequencyListener, StopListener stopListener, String message, int deviceNumber) {
-        this.activityListener = activityListener;
-        this.frequencyListener = frequencyListener;
-        this.stopListener = stopListener;
+    public VBDG() {
         setLayout(new GridLayout(0, 1));
 
-
         frequencySlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 50);
-        frequencySlider.addChangeListener(e -> {
-            JSlider source = (JSlider)e.getSource();
-            if (!source.getValueIsAdjusting()) {
-                int newFrequency = source.getValue();
-                frequencyListener.setFrequency(newFrequency);
-            }
-        });
-
         stopButton = new JButton("Stop");
-        stopButton.addActionListener(e -> {
-            stopListener.stop();
-        });
-
-        deviceNumberField = new JTextField(String.valueOf(deviceNumber));
+        deviceNumberField = new JTextField();
         deviceNumberField.setEditable(false);
         statusComboBox = new JComboBox<>(new String[] {"WAITING", "ACTIVE"});
-        statusComboBox.addActionListener(e -> {
-            String status = (String) statusComboBox.getSelectedItem();
-            activityListener.statusChanged(status);
-        });
 
         add(new JLabel("Frequency: "));
         add(frequencySlider);
@@ -54,6 +36,29 @@ public class VBDG extends JPanel {
         add(statusComboBox);
     }
 
+    public void init(ActivityListener activityListener, FrequencyListener frequencyListener, StopListener stopListener, String message, int deviceNumber) {
+        this.activityListener = activityListener;
+        this.frequencyListener = frequencyListener;
+        this.stopListener = stopListener;
+        this.message = message;
+        this.deviceNumber = deviceNumber;
+        deviceNumberField.setText(String.valueOf(deviceNumber));
+
+        frequencySlider.addChangeListener(e -> {
+            JSlider source = (JSlider)e.getSource();
+            if (!source.getValueIsAdjusting()) {
+                int newFrequency = source.getValue();
+                frequencyListener.setFrequency(newFrequency);
+            }
+        });
+
+        stopButton.addActionListener(e -> {
+            stopListener.stop();
+        });
+
+        statusComboBox.addActionListener(e -> {
+            String status = (String) statusComboBox.getSelectedItem();
+            activityListener.statusChanged(status);
+        });
+    }
 }
-
-

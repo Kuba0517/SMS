@@ -12,8 +12,7 @@ public class BTSC implements MessageListener {
     }
 
     @Override
-    public void addMessage(String content) {
-        Message message = new Message(content);
+    public void addMessage(Message message) {
         model.addMessage(message);
     }
 }

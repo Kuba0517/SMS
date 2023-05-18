@@ -7,26 +7,30 @@ import events.BTSConnectionListener;
 
 public class BSCC implements BTSConnectionListener {
     private BSCM model;
-    private BSCG view;
+    private BSCG graphic;
 
     public BSCC(BSCM model, BSCG view) {
         this.model = model;
-        this.view = view;
+        this.graphic = graphic;
+    }
+
+    public BSCG getGraphic(){
+        return graphic;
     }
 
     @Override
     public void addBTS(BTSM bts) {
         model.addBTS(bts);
-        updateView();
+        updateGraphic();
     }
 
     @Override
     public void removeBTS(String id) {
         // Implementacja logiki usuwania BTS
-        updateView();
+        updateGraphic();
     }
 
-    private void updateView() {
+    private void updateGraphic() {
         // Aktualizuj widok na podstawie stanu modelu
     }
 }

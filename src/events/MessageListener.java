@@ -1,6 +1,8 @@
 package events;
 
+import models.Message;
+
 public interface MessageListener {
-    void addMessage(String content);
+    void addMessage(Message content);
 }
 

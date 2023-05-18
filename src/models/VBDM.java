@@ -5,10 +5,12 @@ public class VBDM implements Runnable{
     private String deviceNumber;
     private String activity;
     private boolean active;
+    private Message message;
 
-    public VBDM(String message, int deviceNumber) {
-        frequency = 50; // Domyślna częstotliwość
+    public VBDM(Message message, int deviceNumber) {
+        this.message = message;
         this.deviceNumber = String.valueOf(deviceNumber);
+        frequency = 50; // Domyślna częstotliwość
         active = true;
     }
 
@@ -26,6 +28,10 @@ public class VBDM implements Runnable{
 
     public String getDeviceNumber() {
         return deviceNumber;
+    }
+
+    public Message getMessage() {
+        return message;
     }
 
     public boolean isActive() {
