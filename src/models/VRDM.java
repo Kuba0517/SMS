@@ -1,19 +1,25 @@
 package models;
 
 import java.util.LinkedList;
+
+import events.Device;
+import events.RemoveListener;
+import events.ViewUpdateListener;
 import java.util.Queue;
 
-public class VRDM implements Runnable {
+public class VRDM implements Runnable, Device {
     private Queue<String> messageQueue;
     private boolean isActive;
     private int numberOfMessages;
     private boolean timedDelete;
+    private RemoveListener removeListener;
 
-    public VRDM() {
+    public VRDM(RemoveListener removeListener) {
         this.messageQueue = new LinkedList<>();
         this.isActive = true;
         this.timedDelete = false;
         this.numberOfMessages = 0;
+        this.removeListener = removeListener;
     }
 
 
@@ -32,6 +38,9 @@ public class VRDM implements Runnable {
     public boolean getTimeDelete(){
         return timedDelete;
     }
+    public int getNumberOfMessages(){
+        return numberOfMessages;
+    }
 
     public void receiveMessage(String message) {
         synchronized (this) {
@@ -40,8 +49,15 @@ public class VRDM implements Runnable {
         }
     }
 
+    @Override
     public void stop() {
         this.isActive = false;
+        removeListener.remove((Device)this);
+    }
+
+    @Override
+    public void start() {
+
     }
 
     @Override

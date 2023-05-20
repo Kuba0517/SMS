@@ -1,20 +1,22 @@
 package graphics;
 
-import events.AddButtonListener;
+import controller.VBDC;
+import events.AddButtonListenerMessage;
 import events.ViewUpdateListener;
 import models.Message;
+import models.SenderM;
 import models.VBDM;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class SenderG extends JPanel implements ViewUpdateListener<VBDM> {
+public class SenderG extends JPanel implements ViewUpdateListener<SenderM> {
     private JButton addSenderButton;
     private JPanel devicePanel;
     private JScrollPane scrollPane;
-    private AddButtonListener addButtonListener;
+    private AddButtonListenerMessage addButtonListener;
 
-    public SenderG(AddButtonListener addButtonListener) {
+    public SenderG(AddButtonListenerMessage<Message> addButtonListener) {
         this.addButtonListener = addButtonListener;
         setLayout(new BorderLayout());
 
@@ -30,7 +32,7 @@ public class SenderG extends JPanel implements ViewUpdateListener<VBDM> {
             String message = JOptionPane.showInputDialog(this, "Enter the message");
             Message messageObj = new Message(message);
             if (messageObj.getContent() != null) {
-                addButtonListener.addItem(messageObj);
+                addButtonListener.add(messageObj);
                 revalidate();
                 repaint();
             }
@@ -38,10 +40,16 @@ public class SenderG extends JPanel implements ViewUpdateListener<VBDM> {
     }
 
     @Override
-    public void updateView(VBDM vbdm) {
-        JLabel label = new JLabel("New VBDM added: " + vbdm.getMessage().getContent());
-        devicePanel.add(label);
-        revalidate();
-        repaint();
+    public void updateView(SenderM item) {
+        devicePanel.removeAll();
+        for(VBDM vbdm : item.getVBDList()) {
+            System.out.println("hello");
+            VBDC controller = new VBDC(vbdm);
+            VBDG vbdg = new VBDG();
+            vbdg.init(controller);
+            devicePanel.add(vbdg);
+        }
+        devicePanel.revalidate();
+        devicePanel.repaint();
     }
 }

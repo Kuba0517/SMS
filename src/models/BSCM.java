@@ -1,32 +1,53 @@
 package models;
 
+import events.ViewUpdateListener;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public class BSCM implements Runnable {
-    private Map<String, BTSM> btsMap;
+public class BSCM {
+    private static int number;
+    private int thisNumber;
+    private int smsTransfered;
+    private List<ViewUpdateListener<BSCM>> listeners;
+    private int smsPending;
 
     public BSCM() {
-        btsMap = new HashMap<>();
+        thisNumber = ++number;
+        this.smsTransfered = 0;
+        this.smsPending = 0;
+        this.listeners = new ArrayList<>();
     }
 
-    public void addBTS(BTSM bts) {
-        btsMap.put(bts.getId(), bts);
+
+    public void addViewUpdateListener(ViewUpdateListener<BSCM> listener){
+        listeners.add(listener);
+    }
+    public String getNumber() {
+        return Integer.toString(thisNumber);
     }
 
-    @Override
-    public void run() {
-        while (true) {
-            for (BTSM bts : btsMap.values()) {
-                Message message = bts.retrieveMessage();
-                if (message != null) {
-                    processMessage(message);
-                }
-            }
+    public String getSmsTransfered() {
+        return Integer.toString(smsTransfered);
+    }
+
+    public void setSmsTransfered(int smsTransfered) {
+        this.smsTransfered = smsTransfered;
+    }
+
+    public String getPendingMessage() {
+        return Integer.toString(smsPending);
+    }
+
+    public void setSmsPending(int smsPending) {
+        this.smsPending = smsPending;
+    }
+
+    private void fireViewUpdate(){
+        for(ViewUpdateListener<BSCM> listener : listeners){
+            listener.updateView(this);
         }
-    }
-
-    private void processMessage(Message message) {
-        // Logika przetwarzania wiadomości
     }
 }

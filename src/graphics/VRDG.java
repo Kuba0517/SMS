@@ -1,36 +1,40 @@
 package graphics;
 
 import javax.swing.*;
+import events.VRD;
+
 import java.awt.*;
-import events.ActivityListener;
-import events.TickListener;
-import events.StopListener;
 
 public class VRDG extends JPanel {
     private JButton stopButton;
     private JLabel messageCountLabel;
     private JCheckBox resetCheckBox;
-    private StopListener stopListener;
-    private TickListener tickListener;
+    private VRD inter;
 
-    public VRDG(int deviceNumber, StopListener stopListener, TickListener tickListener) {
-        this.stopListener = stopListener;
-        this.tickListener = tickListener;
+    public void init(VRD inter) {
+        this.inter = inter;
+        InitializeComponents();
+    }
+
+    public VRDG() {
+    }
+
+    private void InitializeComponents() {
         setLayout(new GridLayout(0, 1));
 
         stopButton = new JButton("Stop");
-        stopButton.addActionListener(e-> {
-            stopListener.stop();
+        stopButton.addActionListener(e -> {
+            inter.stop();
         });
         messageCountLabel = new JLabel("Messages received: 0");
         resetCheckBox = new JCheckBox("Reset counter every 10s");
-        resetCheckBox.addActionListener(e->{
-            tickListener.tickChanged();
+        resetCheckBox.addActionListener(e -> {
+            inter.setTick();
         });
-
 
         add(stopButton);
         add(messageCountLabel);
         add(resetCheckBox);
     }
+
 }

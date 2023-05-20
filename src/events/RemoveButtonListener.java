@@ -1,4 +1,5 @@
 package events;
 
-public class RemoveButtonListener {
+public interface RemoveButtonListener {
+    void remove();
 }

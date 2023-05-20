@@ -1,30 +1,48 @@
 package graphics;
 
-import events.BTSConnectionListener;
+import controller.VRDC;
+import events.NetworkDevice;
+import events.ViewUpdateListener;
+import models.BSCM;
+import models.ReceiverM;
+import models.VRDM;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class BSCG extends JPanel {
+public class BSCG extends JPanel implements ViewUpdateListener<BSCM> {
     private JLabel number;
     private JLabel smsTransfered;
     private JLabel pendingMessages;
+    private NetworkDevice networkDevice;
+
+    public void init(NetworkDevice inter){
+        this.networkDevice = inter;
+        initializeComponents();
+    }
 
     public BSCG() {
-
-        setLayout(new GridLayout(0,1));
-
-        number = new JLabel("Losowy unikalny numer");
-        smsTransfered = new JLabel("Ilosc smsow");
-        pendingMessages = new JLabel("Pending Messages: 0");
-
-        add(new JLabel("BSC"));
-        add(number);
-        add(smsTransfered);
-        add(pendingMessages);
     }
 
-    public void updatePendingMessages(int count) {
-        pendingMessages.setText("Pending Messages: " + count);
+    private void initializeComponents() {
+        if (networkDevice != null) {
+            setLayout(new GridLayout(0, 1));
+            number = new JLabel("numer: " + networkDevice.getNumber());
+            smsTransfered = new JLabel("Ilosc smsow: " + networkDevice.smsTransfered() );
+            pendingMessages = new JLabel("Oczekujące sms: " + networkDevice.getPendingMessage());
+
+            add(new JLabel("BSC"));
+            add(number);
+            add(smsTransfered);
+            add(pendingMessages);
+        }
     }
+
+    @Override
+    public void updateView(BSCM item) {
+        this.init((NetworkDevice) item);
+        revalidate();
+        repaint();
+    }
+
 }

@@ -1,66 +1,97 @@
 package graphics;
 
 import controller.BSCC;
+import controller.BTSC;
+import controller.NetworkC;
+import events.AddButtonListener;
+import events.RemoveButtonListener;
+import events.ViewUpdateListener;
 import models.BSCM;
+import models.BTSM;
+import models.NetworkM;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.ArrayList;
 
-public class NetworkG extends JPanel {
+public class NetworkG extends JPanel implements ViewUpdateListener<NetworkM> {
     private LinkedBlockingQueue<String> queue;
     private JPanel NetworkPanel;
     private JButton addButton;
     private JButton removeButton;
     private JScrollPane scrollPane;
+    private BTSG startBTSG;
+    private BTSG endBTSG;
+    private AddButtonListener addButtonListener;
+    private RemoveButtonListener removeButtonListener;
 
-    private ArrayList<BSCC> bscControllers = new ArrayList<>();
 
-    public NetworkG() {
-        queue = new LinkedBlockingQueue<>();
+    public NetworkG(AddButtonListener addButtonListener, RemoveButtonListener removeButtonListener) {
+        this.addButtonListener = addButtonListener;
+        this.removeButtonListener = removeButtonListener;
+
+        setLayout(new BorderLayout());
 
         NetworkPanel = new JPanel();
         NetworkPanel.setLayout(new BoxLayout(NetworkPanel, BoxLayout.X_AXIS));
 
-        setLayout(new BorderLayout());
+        startBTSG = new BTSG();
+        endBTSG = new BTSG();
 
-        addButton = new JButton("Add BSC");
+        NetworkPanel.add(startBTSG);
+        NetworkPanel.add(Box.createHorizontalGlue()); // "Wypełniacz" - będzie się rozciągał, aby zająć całą dostępną przestrzeń
+
+
+        addButton = new JButton("+");
         addButton.addActionListener(e -> {
-            BSCM model = new BSCM();
-            BSCG graphic = new BSCG();
-            BSCC controller = new BSCC(model, graphic);
-            bscControllers.add(controller);
-            NetworkPanel.add(graphic);
-            NetworkPanel.revalidate();
-            NetworkPanel.repaint();
+            addButtonListener.add();
+            revalidate();
+            repaint();
         });
 
-        removeButton = new JButton("Remove BSC");
+        removeButton = new JButton("-");
         removeButton.addActionListener(e -> {
-            if (!bscControllers.isEmpty()) {
-                BSCC controllerToRemove = bscControllers.remove(bscControllers.size() - 1);
-                NetworkPanel.remove(controllerToRemove.getGraphic());
-                NetworkPanel.revalidate();
-                NetworkPanel.repaint();
-                // Here you should add logic for deactivating BSC.
-            }
-        });
+            removeButtonListener.remove();
+            revalidate();
+            repaint();
+            });
+
+        NetworkPanel.add(Box.createHorizontalGlue());
+        NetworkPanel.add(endBTSG);
 
         scrollPane = new JScrollPane(NetworkPanel);
+        add(scrollPane, BorderLayout.CENTER);
+
         JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
+        buttonPanel.add(Box.createHorizontalGlue());
         buttonPanel.add(addButton);
         buttonPanel.add(removeButton);
+        buttonPanel.add(Box.createHorizontalGlue());
 
         add(buttonPanel, BorderLayout.SOUTH);
-        add(scrollPane, BorderLayout.CENTER);
     }
 
-    public void sendMessage(String message) {
-        queue.offer(message);
-    }
-
-    public String receiveMessage() {
-        return queue.poll();
+    @Override
+    public void updateView(NetworkM item) {
+        NetworkPanel.removeAll();
+        for(Object obj: item.getWholeNetwork()){
+            if(obj instanceof BTSM){
+                BTSC controller = new BTSC((BTSM)obj);
+                BTSG graphic = new BTSG();
+                graphic.init(controller);
+                controller.setView(graphic);
+                NetworkPanel.add(graphic);
+            }
+            else {
+                BSCC controller = new BSCC((BSCM)obj);
+                BSCG graphic = new BSCG();
+                graphic.init(controller);
+                NetworkPanel.add(graphic);
+            }
+        }
+        revalidate();
+        repaint();
     }
 }

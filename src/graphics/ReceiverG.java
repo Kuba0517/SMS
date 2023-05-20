@@ -2,22 +2,27 @@ package graphics;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
+
 import controller.VRDC;
+import events.AddButtonListener;
+import events.ViewUpdateListener;
+import models.Message;
+import models.ReceiverM;
 import models.VRDM;
 
-public class ReceiverG extends JPanel {
+
+public class ReceiverG extends JPanel implements ViewUpdateListener<ReceiverM> {
     private JButton addButton;
     private JPanel devicePanel;
     private JScrollPane scrollPane;
-    private ArrayList<VRDG> devices;
-    private ArrayList<VRDC> controllers;
+    private AddButtonListener addButtonListener;
 
-    public ReceiverG() {
+    public ReceiverG(AddButtonListener addButtonListener) {
+        this.addButtonListener = addButtonListener;
         setLayout(new BorderLayout());
 
-        devices = new ArrayList<>();
         addButton = new JButton("Add");
+
         devicePanel = new JPanel();
         devicePanel.setLayout(new BoxLayout(devicePanel, BoxLayout.Y_AXIS));
         scrollPane = new JScrollPane(devicePanel);
@@ -26,14 +31,23 @@ public class ReceiverG extends JPanel {
         add(scrollPane, BorderLayout.CENTER);
 
         addButton.addActionListener(e -> {
-            VRDM model = new VRDM();
-            VRDC controller = new VRDC(model);
-            VRDG graphics = new VRDG(devices.size(), controller, controller);
-            devices.add(graphics);
-            devicePanel.add(graphics);
+            addButtonListener.add();
             revalidate();
             repaint();
         });
+    }
+
+    @Override
+    public void updateView(ReceiverM item) {
+        devicePanel.removeAll();
+        for(VRDM vrdm : item.getVRDList()) {
+            VRDC controller = new VRDC(vrdm);
+            VRDG graphic = new VRDG();
+            graphic.init(controller);
+            devicePanel.add(graphic);
+        }
+        revalidate();
+        repaint();
     }
 }
 

@@ -1,37 +1,47 @@
 package controller;
 
+import events.NetworkDevice;
+import events.ViewUpdateListener;
 import graphics.BSCG;
 import models.BSCM;
 import models.BTSM;
-import events.BTSConnectionListener;
+import models.ReceiverM;
+import models.SenderM;
 
-public class BSCC implements BTSConnectionListener {
+public class BSCC implements NetworkDevice, ViewUpdateListener<BSCM> {
     private BSCM model;
-    private BSCG graphic;
+    private ViewUpdateListener<BSCM> view;
 
-    public BSCC(BSCM model, BSCG view) {
+    public BSCC(BSCM model) {
         this.model = model;
-        this.graphic = graphic;
-    }
-
-    public BSCG getGraphic(){
-        return graphic;
+        model.addViewUpdateListener(this);
     }
 
     @Override
-    public void addBTS(BTSM bts) {
-        model.addBTS(bts);
-        updateGraphic();
+    public String getNumber() {
+        return model.getNumber();
+    }
+
+    public void setView(ViewUpdateListener<BSCM> view) {
+        this.view = view;
+        model.addViewUpdateListener(view);
     }
 
     @Override
-    public void removeBTS(String id) {
-        // Implementacja logiki usuwania BTS
-        updateGraphic();
+    public String smsTransfered() {
+        return model.getSmsTransfered();
     }
 
-    private void updateGraphic() {
-        // Aktualizuj widok na podstawie stanu modelu
+    @Override
+    public String getPendingMessage() {
+        return model.getPendingMessage();
+    }
+
+    @Override
+    public void updateView(BSCM item) {
+        if(view != null){
+            view.updateView(item);
+        }
     }
 }
 

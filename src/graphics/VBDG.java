@@ -1,64 +1,42 @@
 package graphics;
 
-import events.ActivityListener;
-import events.FrequencyListener;
-import events.StopListener;
+import events.VBD;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class VBDG extends JPanel {
-    private JSlider frequencySlider;
-    private JButton stopButton;
+public class VBDG extends JPanel{
+    private JComboBox statusLabel;
+    private JSlider frequencyLabel;
     private JTextField deviceNumberField;
-    private JComboBox<String> statusComboBox;
-    private ActivityListener activityListener;
-    private FrequencyListener frequencyListener;
-    private StopListener stopListener;
-    private String message;
-    private int deviceNumber;
+    private JButton stopButton;
+    private VBD inter;
 
+    public void init(VBD inter){
+        this.inter = inter;
+        initializeComponents();
+    }
     public VBDG() {
-        setLayout(new GridLayout(0, 1));
+    }
+    private void initializeComponents() {
+        if (inter != null) {
+            setLayout(new GridLayout(0, 1));
+            frequencyLabel = new JSlider(JSlider.HORIZONTAL, 1, 10, 5);
+            stopButton = new JButton("STOP");
+            statusLabel = new JComboBox<>(new String[]{"WAITING", "ACTIVE"});
+            deviceNumberField = new JTextField("Device Number: " + inter.getDeviceNumber());
+            deviceNumberField.setEditable(false);
 
-        frequencySlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 50);
-        stopButton = new JButton("Stop");
-        deviceNumberField = new JTextField();
-        deviceNumberField.setEditable(false);
-        statusComboBox = new JComboBox<>(new String[] {"WAITING", "ACTIVE"});
 
-        add(new JLabel("Frequency: "));
-        add(frequencySlider);
-        add(stopButton);
-        add(new JLabel("Device Number: "));
-        add(deviceNumberField);
-        add(new JLabel("Status: "));
-        add(statusComboBox);
+            statusLabel.addActionListener(e -> inter.setStatus((String) statusLabel.getSelectedItem()));
+            stopButton.addActionListener(e -> inter.stop());
+            frequencyLabel.addChangeListener(e -> inter.setFrequency(frequencyLabel.getValue()));
+
+            add(statusLabel);
+            add(frequencyLabel);
+            add(deviceNumberField);
+            add(stopButton);
+        }
     }
 
-    public void init(ActivityListener activityListener, FrequencyListener frequencyListener, StopListener stopListener, String message, int deviceNumber) {
-        this.activityListener = activityListener;
-        this.frequencyListener = frequencyListener;
-        this.stopListener = stopListener;
-        this.message = message;
-        this.deviceNumber = deviceNumber;
-        deviceNumberField.setText(String.valueOf(deviceNumber));
-
-        frequencySlider.addChangeListener(e -> {
-            JSlider source = (JSlider)e.getSource();
-            if (!source.getValueIsAdjusting()) {
-                int newFrequency = source.getValue();
-                frequencyListener.setFrequency(newFrequency);
-            }
-        });
-
-        stopButton.addActionListener(e -> {
-            stopListener.stop();
-        });
-
-        statusComboBox.addActionListener(e -> {
-            String status = (String) statusComboBox.getSelectedItem();
-            activityListener.statusChanged(status);
-        });
-    }
 }

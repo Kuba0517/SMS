@@ -1,11 +1,10 @@
 package controller;
 
-import events.ActivityListener;
-import events.FrequencyListener;
-import events.StopListener;
+import events.VBD;
+import models.Message;
 import models.VBDM;
 
-public class VBDC implements ActivityListener, FrequencyListener, StopListener {
+public class VBDC implements VBD {
     private VBDM model;
 
     public VBDC(VBDM model) {
@@ -13,26 +12,31 @@ public class VBDC implements ActivityListener, FrequencyListener, StopListener {
     }
 
     @Override
-    public void setFrequency(int frequency) {
-        model.setFrequency(frequency);
-        System.out.println("Zmiana czestotliwości na " + frequency);
+    public void setStatus(String newStatus) {
+        model.setStatus(newStatus);
     }
 
+    @Override
+    public void setFrequency(int newFrequency) {
+        model.setFrequency(newFrequency);
+    }
+
+    @Override
+    public void setMessage(Message message) {
+        model.setMessage(message);
+    }
+
+    @Override
+    public void start(){
+        model.setStatus("ACTIVE");
+    }
     @Override
     public void stop() {
-        model.setActive(false);
-        System.out.println("The VBD has stopped");
+        model.stop();
     }
 
     @Override
-    public void statusChanged(String newStatus) {
-        model.setActivity(newStatus);
-        System.out.println("Status changed to: " + newStatus);
-    }
-
-    @Override
-    public void frequencyChanged(int newFrequency) {
-
+    public String getDeviceNumber() {
+        return model.getDeviceNumber();
     }
 }
-

@@ -1,10 +1,9 @@
 package controller;
 
-import events.TickListener;
-import events.StopListener;
+import events.VRD;
 import models.VRDM;
 
-public class VRDC implements StopListener, TickListener {
+public class VRDC implements VRD {
     private VRDM model;
 
     public VRDC(VRDM model) {
@@ -12,15 +11,24 @@ public class VRDC implements StopListener, TickListener {
     }
 
     @Override
-    public void tickChanged() {
+    public void setTick() {
         model.setTimedDelete();
         System.out.println(model.getTimeDelete());
     }
 
     @Override
     public void stop() {
-        model.setActive(false);
+        model.stop();
         System.out.println("The VRD has stopped");
     }
 
+    @Override
+    public void start() {
+
+    }
+
+    @Override
+    public int getNumberOfMessages() {
+        return model.getNumberOfMessages();
+    }
 }
