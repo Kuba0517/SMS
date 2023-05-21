@@ -4,6 +4,7 @@ import controller.BSCC;
 import controller.BTSC;
 import controller.NetworkC;
 import events.AddButtonListener;
+import events.NetworkDevice;
 import events.RemoveButtonListener;
 import events.ViewUpdateListener;
 import models.BSCM;
@@ -16,13 +17,10 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.ArrayList;
 
 public class NetworkG extends JPanel implements ViewUpdateListener<NetworkM> {
-    private LinkedBlockingQueue<String> queue;
     private JPanel NetworkPanel;
     private JButton addButton;
     private JButton removeButton;
     private JScrollPane scrollPane;
-    private BTSG startBTSG;
-    private BTSG endBTSG;
     private AddButtonListener addButtonListener;
     private RemoveButtonListener removeButtonListener;
 
@@ -36,10 +34,6 @@ public class NetworkG extends JPanel implements ViewUpdateListener<NetworkM> {
         NetworkPanel = new JPanel();
         NetworkPanel.setLayout(new BoxLayout(NetworkPanel, BoxLayout.X_AXIS));
 
-        startBTSG = new BTSG();
-        endBTSG = new BTSG();
-
-        NetworkPanel.add(startBTSG);
         NetworkPanel.add(Box.createHorizontalGlue()); // "Wypełniacz" - będzie się rozciągał, aby zająć całą dostępną przestrzeń
 
 
@@ -58,7 +52,6 @@ public class NetworkG extends JPanel implements ViewUpdateListener<NetworkM> {
             });
 
         NetworkPanel.add(Box.createHorizontalGlue());
-        NetworkPanel.add(endBTSG);
 
         scrollPane = new JScrollPane(NetworkPanel);
         add(scrollPane, BorderLayout.CENTER);
@@ -88,6 +81,7 @@ public class NetworkG extends JPanel implements ViewUpdateListener<NetworkM> {
                 BSCC controller = new BSCC((BSCM)obj);
                 BSCG graphic = new BSCG();
                 graphic.init(controller);
+                controller.setView(graphic);
                 NetworkPanel.add(graphic);
             }
         }

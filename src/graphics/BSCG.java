@@ -1,5 +1,6 @@
 package graphics;
 
+import controller.BSCC;
 import controller.VRDC;
 import events.NetworkDevice;
 import events.ViewUpdateListener;
@@ -40,7 +41,9 @@ public class BSCG extends JPanel implements ViewUpdateListener<BSCM> {
 
     @Override
     public void updateView(BSCM item) {
-        this.init((NetworkDevice) item);
+        this.removeAll();
+        BSCC controller = new BSCC(item);
+        this.init(controller);
         revalidate();
         repaint();
     }

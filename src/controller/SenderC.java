@@ -15,13 +15,13 @@ public class SenderC implements RemoveListener, AddButtonListenerMessage<Message
 
     public SenderC(SenderM model, MainWindowC mainWindowC){
         this.model = model;
-        model.addViewUpdateListener(this);
+        model.setViewUpdateListener(this);
         this.mainWindowC = mainWindowC;
     }
 
     public void setView(ViewUpdateListener<SenderM> view) {
         this.view = view;
-        model.addViewUpdateListener(view);
+        model.setViewUpdateListener(view);
     }
 
     @Override

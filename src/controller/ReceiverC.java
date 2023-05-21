@@ -12,12 +12,12 @@ public class ReceiverC implements AddButtonListener, ViewUpdateListener<Receiver
 
     public ReceiverC(ReceiverM model){
         this.model = model;
-        model.addViewUpdateListener(this);
+        model.setViewUpdateListener(this);
     }
 
     public void setView(ViewUpdateListener<ReceiverM> view) {
         this.view = view;
-        model.addViewUpdateListener(view);
+        model.setViewUpdateListener(view);
     }
 
     @Override

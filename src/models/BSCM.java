@@ -1,24 +1,23 @@
 package models;
 
+import events.MessageReceiverBSC;
 import events.ViewUpdateListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Queue;
+import java.util.Random;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.List;
-import java.util.Map;
 
-public class BSCM {
-    private static int number;
-    private int thisNumber;
-    private int smsTransfered;
-    private List<ViewUpdateListener<BSCM>> listeners;
-    private int smsPending;
+public class BSCM extends NetworkDevice implements Runnable{
+
 
     public BSCM() {
-        thisNumber = ++number;
+        this.messages = new ConcurrentLinkedQueue<>();
         this.smsTransfered = 0;
         this.smsPending = 0;
         this.listeners = new ArrayList<>();
+        thisNumber = ++number;
     }
 
 
@@ -33,21 +32,61 @@ public class BSCM {
         return Integer.toString(smsTransfered);
     }
 
-    public void setSmsTransfered(int smsTransfered) {
-        this.smsTransfered = smsTransfered;
+    public void incrementMessagesTransfered(){
+        smsTransfered++;
+        fireViewUpdate();
     }
 
-    public String getPendingMessage() {
-        return Integer.toString(smsPending);
+    public void addMessage(Message message) {
+        messages.add(message);
+        fireViewUpdate();
+    }
+    public void setMessageReceiver(MessageReceiverBSC messageReceiver) {
+        this.messageReceiver = messageReceiver;
+    }
+
+    public Message retrieveMessage() {
+        return messages.poll();
+    }
+
+    public int getPendingMessage() {
+        return messages.size();
     }
 
     public void setSmsPending(int smsPending) {
         this.smsPending = smsPending;
     }
 
-    private void fireViewUpdate(){
-        for(ViewUpdateListener<BSCM> listener : listeners){
+    private void fireViewUpdate() {
+        List<ViewUpdateListener<BSCM>> copyListeners;
+        synchronized (listenersLock) {
+            copyListeners = new ArrayList<>(listeners);
+        }
+        for(ViewUpdateListener<BSCM> listener : copyListeners){
             listener.updateView(this);
         }
+    }
+
+    @Override
+    public void run() {
+        while(true) {
+            Message message = retrieveMessage();
+            if(message != null) {
+                messageReceiver.receiveMessageBSC(message, getNumber());
+                incrementMessagesTransfered();
+            } else {
+                try {
+                    Thread.sleep((RANDOM.nextInt(10) + 5) * 1000); // Czekamy sekundę, jeżeli nie ma wiadomości do przesłania
+                } catch(InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    return;
+                }
+            }
+        }
+    }
+
+    public void Start(){
+        thread = new Thread(this);
+        thread.start();
     }
 }

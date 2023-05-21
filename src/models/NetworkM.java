@@ -7,12 +7,15 @@ public class NetworkM {
     private ArrayList<BSCM> bscmList;
     private ArrayList<ViewUpdateListener<NetworkM>> listeners;
     private BTSM startBtsm;
+    private BSCM middleBscm;
     private BTSM endBtsm;
     private ArrayList<Object> wholeNetwork;
 
     public NetworkM(){
         bscmList = new ArrayList<>();
         startBtsm = new BTSM();
+        middleBscm = new BSCM();
+        bscmList.add(middleBscm);
         endBtsm = new BTSM();
         listeners = new ArrayList<>();
         wholeNetwork = new ArrayList<>();

@@ -4,6 +4,7 @@ import events.AddButtonListener;
 import events.NetworkGettable;
 import events.RemoveButtonListener;
 import events.ViewUpdateListener;
+import graphics.NetworkG;
 import models.*;
 
 public class NetworkC implements AddButtonListener, RemoveButtonListener, ViewUpdateListener<NetworkM>, NetworkGettable {
@@ -18,6 +19,7 @@ public class NetworkC implements AddButtonListener, RemoveButtonListener, ViewUp
     public void setView(ViewUpdateListener<NetworkM> view) {
         this.view = view;
         model.addViewUpdateListener(view);
+        updateView(model);
     }
 
     @Override

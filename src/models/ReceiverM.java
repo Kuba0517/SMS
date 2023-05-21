@@ -5,35 +5,34 @@ import events.ViewUpdateListener;
 
 public class ReceiverM {
     private ArrayList<VRDM> vrdmList;
-    private ArrayList<ViewUpdateListener<ReceiverM>> listeners;
+    private ViewUpdateListener<ReceiverM> listener;
 
     public ReceiverM() {
         vrdmList = new ArrayList<>();
-        listeners = new ArrayList<>();
     }
 
     public void addVRD(VRDM vrdm) {
         vrdmList.add(vrdm);
-        fireUpdateView();
+        fireViewUpdate();
     }
 
 
     public void removeVRD(VRDM vrdm) {
         vrdmList.remove(vrdm);
-        fireUpdateView();
+        fireViewUpdate();
     }
 
     public ArrayList<VRDM> getVRDList() {
         return vrdmList;
     }
 
-    public void addViewUpdateListener(ViewUpdateListener<ReceiverM> listener) {
-        listeners.add(listener);
+    public void setViewUpdateListener(ViewUpdateListener<ReceiverM> listener) { // Zmienione na set zamiast add
+        this.listener = listener;
     }
 
-    private void fireUpdateView(){
-        for(ViewUpdateListener<ReceiverM> reciver : listeners){
-            reciver.updateView(this);
+    private void fireViewUpdate() {
+        if (listener != null) { // Sprawdzenie, czy listener nie jest nullem
+            listener.updateView(this);
         }
     }
 }

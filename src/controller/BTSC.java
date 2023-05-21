@@ -9,6 +9,7 @@ import models.ReceiverM;
 public class BTSC implements NetworkDevice, ViewUpdateListener<BTSM> {
     private BTSM model;
     private ViewUpdateListener<BTSM> view;
+    private MainWindowC mainWindowC;
 
     public BTSC(BTSM model) {
         this.model = model;

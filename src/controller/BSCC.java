@@ -34,7 +34,7 @@ public class BSCC implements NetworkDevice, ViewUpdateListener<BSCM> {
 
     @Override
     public String getPendingMessage() {
-        return model.getPendingMessage();
+        return Integer.toString(model.getPendingMessage());
     }
 
     @Override

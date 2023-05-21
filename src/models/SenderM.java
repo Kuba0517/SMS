@@ -7,11 +7,10 @@ import java.util.List;
 
 public class SenderM {
     private List<VBDM> vbdmList;
-    private List<ViewUpdateListener<SenderM>> listeners;
+    private ViewUpdateListener<SenderM> listener;
 
     public SenderM() {
         vbdmList = new ArrayList<>();
-        listeners = new ArrayList<>();
     }
 
     public void addVBD(VBDM vbdm) {
@@ -28,12 +27,12 @@ public class SenderM {
         fireViewUpdate();
     }
 
-    public void addViewUpdateListener(ViewUpdateListener<SenderM> listener) {
-        listeners.add(listener);
+    public void setViewUpdateListener(ViewUpdateListener<SenderM> listener) { // Zmienione na set zamiast add
+        this.listener = listener;
     }
 
     private void fireViewUpdate() {
-        for (ViewUpdateListener<SenderM> listener : listeners) {
+        if (listener != null) { // Sprawdzenie, czy listener nie jest nullem
             listener.updateView(this);
         }
     }

@@ -1,9 +1,17 @@
 package graphics;
 
+import controller.BTSC;
+import controller.NetworkC;
+import events.ViewUpdateListener;
+import models.BTSM;
+import models.MainWindowM;
+import models.NetworkM;
+
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
-public class MainWindowG extends JFrame {
+public class MainWindowG extends JFrame implements ViewUpdateListener<MainWindowM> {
     private JPanel sender;
     private JPanel receiver;
     private JPanel network;
@@ -16,7 +24,10 @@ public class MainWindowG extends JFrame {
 
         this.sender = senderG;
         this.receiver = receiverG;
-        this.network = networkG;
+        this.network = new JPanel();
+        this.network.setLayout(new BoxLayout(this.network, BoxLayout.Y_AXIS));
+        network.add(networkG);
+
 
         add(sender, BorderLayout.WEST);
         add(receiver, BorderLayout.EAST);
@@ -24,5 +35,17 @@ public class MainWindowG extends JFrame {
 
         pack();
         setVisible(true);
+    }
+
+    @Override
+    public void updateView(MainWindowM item) {
+        this.network.removeAll();
+        for (NetworkM networkM: item.getNetworks()) {
+            NetworkC networkC = new NetworkC(networkM);
+            NetworkG networkG = new NetworkG(networkC, networkC);
+            network.add(networkG);
+        }
+        revalidate();
+        repaint();
     }
 }

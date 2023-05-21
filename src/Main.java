@@ -5,16 +5,22 @@ import graphics.ReceiverG;
 import graphics.SenderG;
 import models.*;
 
+import javax.swing.*;
+
 public class Main {
 
     public static void main(String[] args) {
-        // Create the model
+        SwingUtilities.invokeLater(Main::new);
+    }
+
+    public Main() {
         SenderM senderModel = new SenderM();
         ReceiverM receiverModel = new ReceiverM();
         NetworkM networkModel = new NetworkM();
         MainWindowM mainWindowM = new MainWindowM();
 
         // Create the controller, giving it the model
+
         NetworkC networkController = new NetworkC(networkModel);
         MainWindowC mainWindowC = new MainWindowC(mainWindowM, networkController);
         SenderC senderController = new SenderC(senderModel, mainWindowC);
@@ -31,6 +37,7 @@ public class Main {
         senderController.setView(senderView);
         receiverController.setView(reciverView);
         networkController.setView(networkView);
+        mainWindowC.setView(mainWindowC);
 
         // Finally, create the main window and give it the view
         MainWindowG mainWindow = new MainWindowG(senderView, reciverView, networkView);
