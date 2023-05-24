@@ -1,7 +1,8 @@
 package events;
 
-public interface NetworkDevice {
+public interface NetworkDeviceInter {
     String getNumber();
-    String smsTransfered();
+    String getSmsTransfered();
     String getPendingMessage();
+
 }

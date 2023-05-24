@@ -1,14 +1,10 @@
 package controller;
 
-import events.NetworkDevice;
+import events.NetworkDeviceInter;
 import events.ViewUpdateListener;
-import graphics.BSCG;
 import models.BSCM;
-import models.BTSM;
-import models.ReceiverM;
-import models.SenderM;
 
-public class BSCC implements NetworkDevice, ViewUpdateListener<BSCM> {
+public class BSCC implements ViewUpdateListener<BSCM>, NetworkDeviceInter {
     private BSCM model;
     private ViewUpdateListener<BSCM> view;
 
@@ -28,8 +24,8 @@ public class BSCC implements NetworkDevice, ViewUpdateListener<BSCM> {
     }
 
     @Override
-    public String smsTransfered() {
-        return model.getSmsTransfered();
+    public String getSmsTransfered() {
+        return Integer.toString(model.getTransferedSms());
     }
 
     @Override
@@ -40,7 +36,7 @@ public class BSCC implements NetworkDevice, ViewUpdateListener<BSCM> {
     @Override
     public void updateView(BSCM item) {
         if(view != null){
-            view.updateView(item);
+            view.updateView((BSCM)item);
         }
     }
 }

@@ -6,7 +6,7 @@ import java.awt.*;
 import controller.VRDC;
 import events.AddButtonListener;
 import events.ViewUpdateListener;
-import models.Message;
+import models.NetworkDevice;
 import models.ReceiverM;
 import models.VRDM;
 

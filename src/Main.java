@@ -17,13 +17,11 @@ public class Main {
         SenderM senderModel = new SenderM();
         ReceiverM receiverModel = new ReceiverM();
         NetworkM networkModel = new NetworkM();
-        MainWindowM mainWindowM = new MainWindowM();
 
         // Create the controller, giving it the model
 
         NetworkC networkController = new NetworkC(networkModel);
-        MainWindowC mainWindowC = new MainWindowC(mainWindowM, networkController);
-        SenderC senderController = new SenderC(senderModel, mainWindowC);
+        SenderC senderController = new SenderC(senderModel, networkController);
         ReceiverC receiverController = new ReceiverC(receiverModel);
 
 
@@ -37,7 +35,6 @@ public class Main {
         senderController.setView(senderView);
         receiverController.setView(reciverView);
         networkController.setView(networkView);
-        mainWindowC.setView(mainWindowC);
 
         // Finally, create the main window and give it the view
         MainWindowG mainWindow = new MainWindowG(senderView, reciverView, networkView);

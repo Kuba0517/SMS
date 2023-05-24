@@ -1,15 +1,12 @@
 package controller;
 
-import events.NetworkDevice;
+import events.NetworkDeviceInter;
 import events.ViewUpdateListener;
 import models.BTSM;
-import models.Message;
-import models.ReceiverM;
 
-public class BTSC implements NetworkDevice, ViewUpdateListener<BTSM> {
+public class BTSC implements ViewUpdateListener<BTSM>, NetworkDeviceInter {
     private BTSM model;
     private ViewUpdateListener<BTSM> view;
-    private MainWindowC mainWindowC;
 
     public BTSC(BTSM model) {
         this.model = model;
@@ -27,8 +24,8 @@ public class BTSC implements NetworkDevice, ViewUpdateListener<BTSM> {
     }
 
     @Override
-    public String smsTransfered() {
-        return model.getTransferedMessage();
+    public String getSmsTransfered() {
+        return Integer.toString(model.getTransferedSms());
     }
 
     @Override
@@ -36,7 +33,6 @@ public class BTSC implements NetworkDevice, ViewUpdateListener<BTSM> {
         return Integer.toString(model.getPendingMessage());
     }
 
-    @Override
     public void updateView(BTSM item) {
         if(view != null){
             view.updateView(item);

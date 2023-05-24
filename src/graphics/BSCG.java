@@ -1,12 +1,9 @@
 package graphics;
 
 import controller.BSCC;
-import controller.VRDC;
-import events.NetworkDevice;
+import events.NetworkDeviceInter;
 import events.ViewUpdateListener;
 import models.BSCM;
-import models.ReceiverM;
-import models.VRDM;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,10 +12,10 @@ public class BSCG extends JPanel implements ViewUpdateListener<BSCM> {
     private JLabel number;
     private JLabel smsTransfered;
     private JLabel pendingMessages;
-    private NetworkDevice networkDevice;
+    private NetworkDeviceInter networkDeviceInter;
 
-    public void init(NetworkDevice inter){
-        this.networkDevice = inter;
+    public void init(NetworkDeviceInter inter){
+        this.networkDeviceInter = inter;
         initializeComponents();
     }
 
@@ -26,11 +23,11 @@ public class BSCG extends JPanel implements ViewUpdateListener<BSCM> {
     }
 
     private void initializeComponents() {
-        if (networkDevice != null) {
+        if (networkDeviceInter != null) {
             setLayout(new GridLayout(0, 1));
-            number = new JLabel("numer: " + networkDevice.getNumber());
-            smsTransfered = new JLabel("Ilosc smsow: " + networkDevice.smsTransfered() );
-            pendingMessages = new JLabel("Oczekujące sms: " + networkDevice.getPendingMessage());
+            number = new JLabel("numer: " + networkDeviceInter.getNumber());
+            smsTransfered = new JLabel("Przetworzone: " + networkDeviceInter.getSmsTransfered() );
+            pendingMessages = new JLabel("Oczekujące sms: " + networkDeviceInter.getPendingMessage());
 
             add(new JLabel("BSC"));
             add(number);
@@ -41,11 +38,9 @@ public class BSCG extends JPanel implements ViewUpdateListener<BSCM> {
 
     @Override
     public void updateView(BSCM item) {
-        this.removeAll();
         BSCC controller = new BSCC(item);
-        this.init(controller);
-        revalidate();
-        repaint();
+            smsTransfered.setText("Przetworzone: " + controller.getSmsTransfered());
+            pendingMessages.setText("Oczekujące sms: " + controller.getPendingMessage());
     }
 
 }

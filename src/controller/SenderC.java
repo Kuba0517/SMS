@@ -5,18 +5,19 @@ import events.Device;
 import events.RemoveListener;
 import events.ViewUpdateListener;
 import models.Message;
+import models.NetworkDevice;
 import models.SenderM;
 import models.VBDM;
 
 public class SenderC implements RemoveListener, AddButtonListenerMessage<Message>, ViewUpdateListener<SenderM> {
     private SenderM model;
     private ViewUpdateListener<SenderM> view;
-    private MainWindowC mainWindowC;
+    private NetworkC networkC;
 
-    public SenderC(SenderM model, MainWindowC mainWindowC){
+    public SenderC(SenderM model, NetworkC networkC){
         this.model = model;
+        this.networkC = networkC;
         model.setViewUpdateListener(this);
-        this.mainWindowC = mainWindowC;
     }
 
     public void setView(ViewUpdateListener<SenderM> view) {
@@ -26,7 +27,7 @@ public class SenderC implements RemoveListener, AddButtonListenerMessage<Message
 
     @Override
     public void add(Message message) {
-        VBDM vbdm = new VBDM(message, this, mainWindowC);
+        VBDM vbdm = new VBDM(message, this, networkC);
         model.addVBD(vbdm);
         System.out.println("Dodajemy VBD");
     }

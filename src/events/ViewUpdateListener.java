@@ -1,6 +1,6 @@
 package events;
 
-import models.VBDM;
+import models.NetworkDevice;
 
 public interface ViewUpdateListener<T> {
     void updateView(T item);

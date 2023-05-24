@@ -1,20 +1,17 @@
 package graphics;
 
 import controller.BSCC;
+import controller.BSCSectionController;
 import controller.BTSC;
-import controller.NetworkC;
+import controller.BTSSectionController;
 import events.AddButtonListener;
-import events.NetworkDevice;
+import events.NetworkDeviceInter;
 import events.RemoveButtonListener;
 import events.ViewUpdateListener;
-import models.BSCM;
-import models.BTSM;
-import models.NetworkM;
+import models.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.ArrayList;
 
 public class NetworkG extends JPanel implements ViewUpdateListener<NetworkM> {
     private JPanel NetworkPanel;
@@ -70,16 +67,16 @@ public class NetworkG extends JPanel implements ViewUpdateListener<NetworkM> {
     public void updateView(NetworkM item) {
         NetworkPanel.removeAll();
         for(Object obj: item.getWholeNetwork()){
-            if(obj instanceof BTSM){
-                BTSC controller = new BTSC((BTSM)obj);
-                BTSG graphic = new BTSG();
+            if(obj instanceof BTSSectionModel){
+                BTSSectionController controller = new BTSSectionController((BTSSectionModel) obj);
+                BTSSectionG graphic = new BTSSectionG();
                 graphic.init(controller);
                 controller.setView(graphic);
                 NetworkPanel.add(graphic);
             }
             else {
-                BSCC controller = new BSCC((BSCM)obj);
-                BSCG graphic = new BSCG();
+                BSCSectionController controller = new BSCSectionController((BSCSectionModel) obj);
+                BSCSectionG graphic = new BSCSectionG();
                 graphic.init(controller);
                 controller.setView(graphic);
                 NetworkPanel.add(graphic);

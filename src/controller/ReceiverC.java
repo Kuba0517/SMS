@@ -1,7 +1,7 @@
 package controller;
 
 import events.*;
-import models.Message;
+import models.NetworkDevice;
 import models.ReceiverM;
 import models.VRDM;
 

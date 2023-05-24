@@ -2,7 +2,7 @@ package models;
 
 import events.Device;
 import events.RemoveListener;
-import events.MessageReceiver;
+import events.MessageSender;
 import java.util.Random;
 
 public class VBDM implements Runnable, Device {
@@ -13,9 +13,9 @@ public class VBDM implements Runnable, Device {
     private boolean active;
     private int deviceNumber;
     private RemoveListener removeListener;
-    private MessageReceiver messageReceiver;
+    private MessageSender messageReceiver;
 
-    public VBDM(Message message, RemoveListener removeListener, MessageReceiver messageReceiver){
+    public VBDM(Message message, RemoveListener removeListener, MessageSender messageReceiver){
         this.status = "WAITING";
         this.frequency = RANDOM.nextInt(10) + 1;
         this.message = message;
@@ -63,11 +63,11 @@ public class VBDM implements Runnable, Device {
     @Override
     public void run() {
         while (active) {
-            System.out.println("Sending message " + message.getContent());
-            messageReceiver.receiveMessage(message, getDeviceNumber());
             try {
-                Thread.sleep(1000 / frequency);
-            } catch (InterruptedException e) {
+                Thread.sleep(2000 / frequency);
+                messageReceiver.sendMessage(message, getDeviceNumber());
+                System.out.println("WATEK 1");
+            }catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }

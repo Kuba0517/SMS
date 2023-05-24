@@ -4,26 +4,24 @@ import events.ViewUpdateListener;
 import java.util.ArrayList;
 
 public class NetworkM {
-    private ArrayList<BSCM> bscmList;
     private ArrayList<ViewUpdateListener<NetworkM>> listeners;
-    private BTSM startBtsm;
-    private BSCM middleBscm;
-    private BTSM endBtsm;
+    private BTSSectionModel startBtsm;
+    private ArrayList<BSCSectionModel> bscmList;
+    private BTSSectionModel endBtsm;
     private ArrayList<Object> wholeNetwork;
 
     public NetworkM(){
+        startBtsm = new BTSSectionModel();
         bscmList = new ArrayList<>();
-        startBtsm = new BTSM();
-        middleBscm = new BSCM();
-        bscmList.add(middleBscm);
-        endBtsm = new BTSM();
+        bscmList.add(new BSCSectionModel());
+        endBtsm = new BTSSectionModel();
         listeners = new ArrayList<>();
         wholeNetwork = new ArrayList<>();
         updateWholeNetwork();
     }
 
-    public void addBscm(BSCM bscm){
-        bscmList.add(bscm);
+    public void addBscm(){
+        bscmList.add(new BSCSectionModel());
         fireViewUpdate();
     }
 
@@ -34,23 +32,23 @@ public class NetworkM {
         }
     }
 
-    public BTSM getStartBtsm() {
+    public BTSSectionModel getStartBtsm() {
         return startBtsm;
     }
 
-    public void setStartBtsm(BTSM startBtsm) {
+    public void setStartBtsm(BTSSectionModel startBtsm) {
         this.startBtsm = startBtsm;
     }
 
-    public BTSM getEndBtsm() {
+    public BTSSectionModel getEndBtsm() {
         return endBtsm;
     }
 
-    public void setEndBtsm(BTSM endBtsm) {
+    public void setEndBtsm(BTSSectionModel endBtsm) {
         this.endBtsm = endBtsm;
     }
 
-    public ArrayList<BSCM> getBscmList() {
+    public ArrayList<BSCSectionModel> getBscmList() {
         return bscmList;
     }
 
