@@ -1,6 +1,7 @@
 package models;
 
 import java.util.ArrayList;
+
 import events.ViewUpdateListener;
 
 public class ReceiverM {
@@ -35,4 +36,6 @@ public class ReceiverM {
             listener.updateView(this);
         }
     }
+
+
 }

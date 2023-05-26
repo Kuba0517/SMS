@@ -43,6 +43,7 @@ public class ReceiverG extends JPanel implements ViewUpdateListener<ReceiverM> {
         for(VRDM vrdm : item.getVRDList()) {
             VRDC controller = new VRDC(vrdm);
             VRDG graphic = new VRDG();
+            controller.setView(graphic);
             graphic.init(controller);
             devicePanel.add(graphic);
         }

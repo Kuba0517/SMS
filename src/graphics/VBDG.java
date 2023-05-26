@@ -23,7 +23,7 @@ public class VBDG extends JPanel{
             setLayout(new GridLayout(0, 1));
             frequencyLabel = new JSlider(JSlider.HORIZONTAL, 1, 10, 5);
             stopButton = new JButton("STOP");
-            statusLabel = new JComboBox<>(new String[]{"WAITING", "ACTIVE"});
+            statusLabel = new JComboBox<>(new String[]{"ACTIVE", "WAITING"});
             deviceNumberField = new JTextField("Device Number: " + inter.getDeviceNumber());
             deviceNumberField.setEditable(false);
 

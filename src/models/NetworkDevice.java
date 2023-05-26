@@ -9,7 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-public abstract class NetworkDevice<T extends NetworkDevice<T>> {
+public abstract class NetworkDevice<T extends NetworkDevice<T>> implements Runnable {
     protected final Object listenersLock = new Object();
     private static int number;
     private int thisNumber;
@@ -49,10 +49,22 @@ public abstract class NetworkDevice<T extends NetworkDevice<T>> {
 
     public abstract void setMessageSender(Senders sender);
 
+    public abstract void run();
 
-    public synchronized Message getMessage() {
+
+    public synchronized Message getMessagePeek() {
+        incrementMessagesTransfered();
+        return messages.peek();
+    }
+
+    public synchronized Message getMessagePoll() {
         incrementMessagesTransfered();
         return messages.poll();
+    }
+
+    public void startThread(){
+        Thread thread = new Thread(this);
+        thread.start();
     }
 
     public synchronized void incrementPendingMessages() {

@@ -1,6 +1,6 @@
 package events;
 
 public interface Device {
-    void start();
+    void cont();
     void stop();
 }

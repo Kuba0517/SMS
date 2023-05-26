@@ -14,15 +14,19 @@ public class VBDM implements Runnable, Device {
     private int deviceNumber;
     private RemoveListener removeListener;
     private MessageSender messageReceiver;
+    private final Object lock = new Object();
+    private boolean suspended = false;
+
 
     public VBDM(Message message, RemoveListener removeListener, MessageSender messageReceiver){
         this.status = "WAITING";
         this.frequency = RANDOM.nextInt(10) + 1;
         this.message = message;
         this.deviceNumber = (int) (Math.random() * 11);
-        this.active = false;
+        this.active = true;
         this.removeListener = removeListener;
         this.messageReceiver = messageReceiver;
+        new Thread(this).start();
         }
 
     public void setStatus(String status) {
@@ -30,7 +34,21 @@ public class VBDM implements Runnable, Device {
         active = status.equals("ACTIVE");
         System.out.println("Satus zmieniony na: " + active);
         if(active){
-            start();
+            this.setSuspended();
+        }
+        else {
+            this.cont();
+        }
+    }
+
+    public void setSuspended(){
+        suspended = true;
+    }
+
+    public void cont(){
+        synchronized (lock){
+            suspended = false;
+            lock.notify();
         }
     }
 
@@ -63,6 +81,15 @@ public class VBDM implements Runnable, Device {
     @Override
     public void run() {
         while (active) {
+            synchronized(lock) {
+                while (suspended) {
+                    try {
+                        lock.wait();
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    }
+                }
+            }
             try {
                 Thread.sleep(2000 / frequency);
                 messageReceiver.sendMessage(message, getDeviceNumber());
@@ -73,13 +100,10 @@ public class VBDM implements Runnable, Device {
         }
     }
 
-    public void start() {
-        new Thread(this).start();
-    }
 
     @Override
     public void stop() {
         active = false;
-        removeListener.remove((Device)this);
+        removeListener.remove(this);
     }
 }

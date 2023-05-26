@@ -27,7 +27,7 @@ public class VBDC implements VBD {
     }
 
     @Override
-    public void start(){
+    public void cont(){
         model.setStatus("ACTIVE");
     }
     @Override

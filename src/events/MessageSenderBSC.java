@@ -1,7 +1,8 @@
 package events;
 
+import models.BSCM;
 import models.Message;
 
 public interface MessageSenderBSC{
-    void sendMessageBSC(Message message, String deviceNumber);
+    void sendMessageBSC(BSCM bscm);
 }

@@ -29,7 +29,6 @@ public class SenderC implements RemoveListener, AddButtonListenerMessage<Message
     public void add(Message message) {
         VBDM vbdm = new VBDM(message, this, networkC);
         model.addVBD(vbdm);
-        System.out.println("Dodajemy VBD");
     }
 
 

@@ -34,10 +34,8 @@ public class ReceiverC implements AddButtonListener, ViewUpdateListener<Receiver
 
     @Override
     public void updateView(ReceiverM item) {
-        System.out.println("Aktualizacjjjjjajajaja");
         if(view != null){
             view.updateView(item);
-            System.out.println("Aktualizacja widoku");
         }
     }
 }

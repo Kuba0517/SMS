@@ -3,80 +3,113 @@ package models;
 import java.util.LinkedList;
 
 import events.Device;
+import events.MessageListener;
 import events.RemoveListener;
 import events.ViewUpdateListener;
 import java.util.Queue;
 
-public class VRDM implements Runnable, Device {
+public class VRDM implements Runnable, Device, MessageListener {
     private Queue<String> messageQueue;
     private boolean isActive;
-    private int numberOfMessages;
-    private boolean timedDelete;
+    private boolean timedDelayed;
     private RemoveListener removeListener;
+    private ViewUpdateListener<VRDM> listener;
+    private Thread thread;
 
     public VRDM(RemoveListener removeListener) {
         this.messageQueue = new LinkedList<>();
         this.isActive = true;
-        this.timedDelete = false;
-        this.numberOfMessages = 0;
+        this.timedDelayed = false;
         this.removeListener = removeListener;
+        this.thread = new Thread(this);
+        thread.start();
     }
+
 
 
     public void setActive(boolean active) {
         isActive = active;
     }
 
-    public void setNumberOfMessages(int numberOfMessages) {
-        this.numberOfMessages = numberOfMessages;
-    }
 
-    public void setTimedDelete() {
-        this.timedDelete = !this.timedDelete;
-    }
-
-    public boolean getTimeDelete(){
-        return timedDelete;
-    }
-    public int getNumberOfMessages(){
-        return numberOfMessages;
-    }
-
-    public void receiveMessage(String message) {
-        synchronized (this) {
-            messageQueue.add(message);
-            notify();
+    public void setTimedDelayed() {
+        synchronized(this) {
+            this.timedDelayed = !this.timedDelayed;
+            if(this.timedDelayed) {
+                this.notify();
+            }
         }
     }
 
-    @Override
-    public void stop() {
-        this.isActive = false;
-        removeListener.remove((Device)this);
+    public int getNumberOfMessages(){
+        return messageQueue.size();
     }
 
-    @Override
-    public void start() {
 
+    @Override
+    public void messageTo(Message message) {
+        synchronized (this) {
+            messageQueue.add(message.getContent());
+            fireViewUpdate();
+        }
+    }
+
+    private void clearMessageQueue() {
+        synchronized (this) {
+            messageQueue.clear();
+            fireViewUpdate();
+        }
     }
 
     @Override
     public void run() {
         while (isActive) {
-            synchronized (this) {
-                while (messageQueue.isEmpty()) {
+            synchronized(this) {
+                while (!timedDelayed) {
                     try {
-                        wait();
+                        this.wait();
                     } catch (InterruptedException e) {
                         Thread.currentThread().interrupt();
-                        System.out.println("Thread was interrupted, Failed to complete operation");
+                        return;
                     }
                 }
-                // process received message
-                String receivedMessage = messageQueue.poll();
-                // TODO: implement logic to process the received message
+            }
+            try {
+                Thread.sleep(10000);
+                if (timedDelayed) {
+                    clearMessageQueue();
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
             }
         }
     }
+
+
+
+    @Override
+    public void stop() {
+        this.isActive = false;
+        if (thread != null) {
+            thread.interrupt();  // Przerwij wątek
+        }
+        removeListener.remove(this);
+    }
+
+    @Override
+    public void cont() {
+
+    }
+
+    public void setViewUpdateListener(ViewUpdateListener<VRDM> listener) { // Zmienione na set zamiast add
+        this.listener = listener;
+    }
+
+    private void fireViewUpdate(){
+        if(listener != null){
+            listener.updateView(this);
+        }
+    }
+
 }
 

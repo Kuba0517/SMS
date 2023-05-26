@@ -30,13 +30,31 @@ public class SenderG extends JPanel implements ViewUpdateListener<SenderM> {
         add(scrollPane, BorderLayout.CENTER);
 
         addSenderButton.addActionListener(e -> {
-            String message = JOptionPane.showInputDialog(this, "Enter the message");
-            Message messageObj = new Message(message);
-            if (messageObj.getContent() != null) {
-                addButtonListener.add(messageObj);
-                revalidate();
-                repaint();
-            }
+            JDialog dialog = new JDialog();
+            dialog.setModal(true);
+            dialog.setLayout(new FlowLayout());
+
+            JTextField textField = new JTextField(20);
+            JButton okButton = new JButton("SEND");
+
+            okButton.addActionListener(e1 -> {
+                String message = textField.getText();
+                Message messageObj = new Message(message);
+                if (messageObj.getContent() != null) {
+                    addButtonListener.add(messageObj);
+                    revalidate();
+                    repaint();
+                }
+                dialog.dispose();
+            });
+
+            dialog.add(new JLabel("Enter the message:"));
+            dialog.add(textField);
+            dialog.add(okButton);
+
+            dialog.pack();
+            dialog.setLocationRelativeTo(this);
+            dialog.setVisible(true);
         });
     }
 

@@ -1,13 +1,19 @@
 package graphics;
 
 import javax.swing.*;
+
+import controller.VBDC;
 import events.VRD;
+import events.ViewUpdateListener;
+import models.SenderM;
+import models.VBDM;
+import models.VRDM;
 
 import java.awt.*;
 
-public class VRDG extends JPanel {
+public class VRDG extends JPanel implements ViewUpdateListener<VRDM> {
     private JButton stopButton;
-    private JLabel messageCountLabel;
+    private JLabel messagesCount;
     private JCheckBox resetCheckBox;
     private VRD inter;
 
@@ -26,15 +32,22 @@ public class VRDG extends JPanel {
         stopButton.addActionListener(e -> {
             inter.stop();
         });
-        messageCountLabel = new JLabel("Messages received: 0");
+        messagesCount = new JLabel("Messages received: 0");
         resetCheckBox = new JCheckBox("Reset counter every 10s");
         resetCheckBox.addActionListener(e -> {
             inter.setTick();
         });
 
         add(stopButton);
-        add(messageCountLabel);
+        add(messagesCount);
         add(resetCheckBox);
+    }
+
+    @Override
+    public void updateView(VRDM item) {
+        messagesCount.setText("Messages received: " + inter.getNumberOfMessages());
+        revalidate();
+        repaint();
     }
 
 }

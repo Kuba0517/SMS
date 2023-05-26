@@ -20,7 +20,7 @@ public class Main {
 
         // Create the controller, giving it the model
 
-        NetworkC networkController = new NetworkC(networkModel);
+        NetworkC networkController = new NetworkC(networkModel, receiverModel);
         SenderC senderController = new SenderC(senderModel, networkController);
         ReceiverC receiverController = new ReceiverC(receiverModel);
 
