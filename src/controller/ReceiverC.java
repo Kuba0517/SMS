@@ -20,6 +20,7 @@ public class ReceiverC implements AddButtonListener, ViewUpdateListener<Receiver
         model.setViewUpdateListener(view);
     }
 
+
     @Override
     public void add(){
         VRDM vrdm = new VRDM(this);

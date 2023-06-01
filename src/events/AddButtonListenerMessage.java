@@ -1,5 +1,6 @@
 package events;
 
-public interface AddButtonListenerMessage<T> {
+public interface
+AddButtonListenerMessage<T> {
     void add(T t);
 }

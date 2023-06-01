@@ -37,6 +37,16 @@ public class VBDC implements VBD {
 
     @Override
     public String getDeviceNumber() {
-        return model.getDeviceNumber();
+        return Integer.toString(model.getDeviceNumber());
+    }
+
+    @Override
+    public int getFrequency() {
+        return model.getFrequency();
+    }
+
+    @Override
+    public String getStatus() {
+        return model.getStatus();
     }
 }

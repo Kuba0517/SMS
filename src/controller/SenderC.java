@@ -39,7 +39,6 @@ public class SenderC implements RemoveListener, AddButtonListenerMessage<Message
 
     @Override
     public void updateView(SenderM item) {
-        System.out.println("Aktualizacjjjjjajajaja");
         if(view != null){
             view.updateView(item);
             System.out.println("Aktualizacja widoku");

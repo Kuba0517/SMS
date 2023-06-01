@@ -1,5 +1,6 @@
 package controller;
 
+import events.GetReceipents;
 import events.VRD;
 import events.ViewUpdateListener;
 import models.SenderM;
@@ -17,6 +18,11 @@ public class VRDC implements VRD, ViewUpdateListener<VRDM> {
     @Override
     public void setTick() {
         model.setTimedDelayed();
+    }
+
+    @Override
+    public boolean getTick() {
+        return model.getTimeDelayed();
     }
 
     @Override

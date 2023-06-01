@@ -5,28 +5,41 @@ import events.RemoveListener;
 import events.MessageSender;
 import java.util.Random;
 
+import static models.VRDM.getCounter;
+
 public class VBDM implements Runnable, Device {
     private static final Random RANDOM = new Random();
     private String status;
     private int frequency;
     private Message message;
     private boolean active;
+    private static int counter = 1;
     private int deviceNumber;
     private RemoveListener removeListener;
     private MessageSender messageReceiver;
     private final Object lock = new Object();
     private boolean suspended = false;
-
+    private int receipent;
+    private Random random = new Random();
+    private int possibleRecipentPool;
+    private Thread thread;
+    private int smsTransfered;
 
     public VBDM(Message message, RemoveListener removeListener, MessageSender messageReceiver){
-        this.status = "WAITING";
+        this.status = "ACTIVE";
         this.frequency = RANDOM.nextInt(10) + 1;
         this.message = message;
-        this.deviceNumber = (int) (Math.random() * 11);
+        this.deviceNumber = counter++;
         this.active = true;
         this.removeListener = removeListener;
         this.messageReceiver = messageReceiver;
-        new Thread(this).start();
+        this.possibleRecipentPool = getCounter();
+        this.receipent = random.nextInt(possibleRecipentPool) + 1;
+        this.thread = new Thread(this);
+        this.smsTransfered = 0;
+        message.setRecipient(Integer.toString(receipent));
+        System.out.println("Odbiorca: " + receipent);
+        thread.start();
         }
 
     public void setStatus(String status) {
@@ -57,6 +70,15 @@ public class VBDM implements Runnable, Device {
         System.out.println("new frequency" + frequency);
     }
 
+    public Thread getThread() {
+        return thread;
+    }
+    public void incrementTransferedSMS(){
+        smsTransfered++;
+    }
+    public int getTransferedSMS(){
+        return smsTransfered;
+    }
     public void setMessage(Message message) {
         this.message = message;
     }
@@ -73,32 +95,27 @@ public class VBDM implements Runnable, Device {
         return message;
     }
 
-    public String getDeviceNumber() {
-        System.out.println(deviceNumber);
-        return Integer.toString(deviceNumber);
+    public int getDeviceNumber() {
+        return deviceNumber;
     }
 
     @Override
     public void run() {
-        while (active) {
-            synchronized(lock) {
-                while (suspended) {
-                    try {
+        try {
+            while (!Thread.currentThread().isInterrupted() && active) {
+                synchronized (lock) {
+                    while (suspended) {
                         lock.wait();
-                    } catch (InterruptedException e) {
-                        Thread.currentThread().interrupt();
                     }
                 }
-            }
-            try {
                 Thread.sleep(2000 / frequency);
-                messageReceiver.sendMessage(message, getDeviceNumber());
-                System.out.println("WATEK 1");
+                messageReceiver.sendMessage(message, Integer.toString(getDeviceNumber()));
+                this.incrementTransferedSMS();
+            }
             }catch (InterruptedException e) {
-                e.printStackTrace();
+                Thread.currentThread().interrupt();
             }
         }
-    }
 
 
     @Override

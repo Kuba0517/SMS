@@ -17,12 +17,14 @@ public abstract class NetworkDevice<T extends NetworkDevice<T>> implements Runna
     protected Queue<Message> messages;
     private int smsPending;
     private List<ViewUpdateListener<T>> listeners;
+    private Thread thread;
 
     public NetworkDevice() {
         this.messages = new LinkedList<>();
         this.smsTransfered = 0;
         this.smsPending = 0;
         this.listeners = new ArrayList<>();
+        thread = new Thread(this);
         thisNumber = ++number;
     }
 
@@ -53,7 +55,6 @@ public abstract class NetworkDevice<T extends NetworkDevice<T>> implements Runna
 
 
     public synchronized Message getMessagePeek() {
-        incrementMessagesTransfered();
         return messages.peek();
     }
 
@@ -63,14 +64,12 @@ public abstract class NetworkDevice<T extends NetworkDevice<T>> implements Runna
     }
 
     public void startThread(){
-        Thread thread = new Thread(this);
         thread.start();
     }
-
-    public synchronized void incrementPendingMessages() {
-        smsPending++;
-        fireViewUpdate();
+    public Thread getThread(){
+        return thread;
     }
+    
 
     public int getPendingMessage() {
         return messages.size();

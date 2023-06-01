@@ -39,16 +39,16 @@ public class SenderG extends JPanel implements ViewUpdateListener<SenderM> {
 
             okButton.addActionListener(e1 -> {
                 String message = textField.getText();
-                Message messageObj = new Message(message);
-                if (messageObj.getContent() != null) {
-                    addButtonListener.add(messageObj);
+                Message messageobj = new Message(message);
+                if (messageobj.getContent() != null) {
+                    addButtonListener.add(messageobj);
                     revalidate();
                     repaint();
                 }
                 dialog.dispose();
             });
 
-            dialog.add(new JLabel("Enter the message:"));
+            dialog.add(new JLabel("Message:"));
             dialog.add(textField);
             dialog.add(okButton);
 

@@ -34,6 +34,7 @@ public class VRDG extends JPanel implements ViewUpdateListener<VRDM> {
         });
         messagesCount = new JLabel("Messages received: 0");
         resetCheckBox = new JCheckBox("Reset counter every 10s");
+        resetCheckBox.setSelected(inter.getTick());
         resetCheckBox.addActionListener(e -> {
             inter.setTick();
         });
@@ -46,6 +47,7 @@ public class VRDG extends JPanel implements ViewUpdateListener<VRDM> {
     @Override
     public void updateView(VRDM item) {
         messagesCount.setText("Messages received: " + inter.getNumberOfMessages());
+        resetCheckBox.setSelected(inter.getTick());
         revalidate();
         repaint();
     }

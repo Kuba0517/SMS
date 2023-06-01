@@ -7,7 +7,7 @@ import events.Senders;
 import java.util.Random;
 
 public class BSCM extends NetworkDevice<BSCM>{
-    private static final Random RANDOM = new Random();
+    private Random random = new Random();
     private final Object lock = new Object();
     private MessageSenderBSC messageSender;
     private int numberInOrder;
@@ -15,31 +15,28 @@ public class BSCM extends NetworkDevice<BSCM>{
 
     public BSCM() {
         super();
+        fireViewUpdate();
     }
 
 
     @Override
     public void run() {
-        while (true) {
-            Message message;
-            synchronized (lock) {
-                while (messages.isEmpty()) {
-                    try {
+        try {
+            while (!Thread.currentThread().isInterrupted()) {
+                Message message;
+                synchronized (lock) {
+                    while (messages.isEmpty()) {
                         lock.wait();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
                     }
+                    message = getMessagePeek();
                 }
-                message = getMessagePeek();
-            }
-            if (message != null) {
-                try {
-                    Thread.sleep((RANDOM.nextInt(11) + 5)* 1000);
+                if (message != null) {
+                    Thread.sleep((random.nextInt(11) + 5) * 1000);
                     messageSender.sendMessageBSC(this);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
                 }
             }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
     }
     @Override

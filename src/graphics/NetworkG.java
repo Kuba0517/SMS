@@ -1,11 +1,8 @@
 package graphics;
 
-import controller.BSCC;
 import controller.BSCSectionController;
-import controller.BTSC;
 import controller.BTSSectionController;
 import events.AddButtonListener;
-import events.NetworkDeviceInter;
 import events.RemoveButtonListener;
 import events.ViewUpdateListener;
 import models.*;
@@ -31,7 +28,7 @@ public class NetworkG extends JPanel implements ViewUpdateListener<NetworkM> {
         NetworkPanel = new JPanel();
         NetworkPanel.setLayout(new BoxLayout(NetworkPanel, BoxLayout.X_AXIS));
 
-        NetworkPanel.add(Box.createHorizontalGlue()); // "Wypełniacz" - będzie się rozciągał, aby zająć całą dostępną przestrzeń
+//        NetworkPanel.add(Box.createHorizontalGlue()); // "Wypełniacz" - będzie się rozciągał, aby zająć całą dostępną przestrzeń
 
 
         addButton = new JButton("+");

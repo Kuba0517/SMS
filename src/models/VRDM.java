@@ -8,19 +8,23 @@ import events.RemoveListener;
 import events.ViewUpdateListener;
 import java.util.Queue;
 
+
 public class VRDM implements Runnable, Device, MessageListener {
     private Queue<String> messageQueue;
     private boolean isActive;
+    private static int counter = 1;
     private boolean timedDelayed;
     private RemoveListener removeListener;
     private ViewUpdateListener<VRDM> listener;
     private Thread thread;
+    private int telephoneNumber;
 
     public VRDM(RemoveListener removeListener) {
         this.messageQueue = new LinkedList<>();
         this.isActive = true;
         this.timedDelayed = false;
         this.removeListener = removeListener;
+        this.telephoneNumber = counter++;
         this.thread = new Thread(this);
         thread.start();
     }
@@ -41,6 +45,11 @@ public class VRDM implements Runnable, Device, MessageListener {
         }
     }
 
+
+    public boolean getTimeDelayed() {
+        return timedDelayed;
+    }
+
     public int getNumberOfMessages(){
         return messageQueue.size();
     }
@@ -59,6 +68,10 @@ public class VRDM implements Runnable, Device, MessageListener {
             messageQueue.clear();
             fireViewUpdate();
         }
+    }
+
+    public static int getCounter() {
+        return counter;
     }
 
     @Override
@@ -109,6 +122,10 @@ public class VRDM implements Runnable, Device, MessageListener {
         if(listener != null){
             listener.updateView(this);
         }
+    }
+
+    public int getNumber(){
+        return telephoneNumber;
     }
 
 }

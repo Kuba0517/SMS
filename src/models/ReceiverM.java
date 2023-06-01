@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import events.ViewUpdateListener;
 
 public class ReceiverM {
-    private ArrayList<VRDM> vrdmList;
+    private static ArrayList<VRDM> vrdmList;
     private ViewUpdateListener<ReceiverM> listener;
 
     public ReceiverM() {
@@ -23,7 +23,7 @@ public class ReceiverM {
         fireViewUpdate();
     }
 
-    public ArrayList<VRDM> getVRDList() {
+    public static ArrayList<VRDM> getVRDList() {
         return vrdmList;
     }
 

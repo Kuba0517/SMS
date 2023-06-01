@@ -24,26 +24,22 @@ import events.Senders;
 
         @Override
         public void run() {
-            while (true) {
-                Message message;
-                synchronized (lock) {
-                    while (messages.isEmpty()) {
-                        try {
-                            lock.wait();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
+            try {
+                while (!Thread.currentThread().isInterrupted()) {
+                    Message message;
+                    synchronized (lock) {
+                        while (messages.isEmpty()) {
+                                lock.wait();
                         }
+                        message = getMessagePeek();
                     }
-                    message = getMessagePeek();
-                }
-                if (message != null) {
-                    try {
-                        Thread.sleep(3000);
-                        messageSender.sendMessageBTS(this);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                    if (message != null) {
+                            Thread.sleep(3000);
+                            messageSender.sendMessageBTS(this);
                     }
                 }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
             }
         }
 
